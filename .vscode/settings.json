@@ -4,9 +4,11 @@
         "allproducts",
         "Binshad",
         "fieldname",
+        "handeler",
         "itemfield",
         "listproduct",
         "navlogo",
-        "removeproduct"
+        "removeproduct",
+        "thumnail"
     ]
 }
