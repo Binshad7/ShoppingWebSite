@@ -6,7 +6,7 @@ const AddProduct = () => {
    const [productDetails,setProductDetails] = useState({
       name:'',
       image:'',
-      category:'women',
+      category:'',
       new_price:'',
       old_price:'',
       })
@@ -20,8 +20,42 @@ const AddProduct = () => {
    }
    const Add_product = async ()=>{
             console.log(productDetails);
-   }
+            let responseData;
+            let product = productDetails;
 
+            let formData = new FormData();
+
+            formData.append('product',image);
+
+            await fetch('http://localhost:4000/upload',{
+               method:"POST",
+               headers:{
+                  Accept:'application/json',
+               },
+               body:formData,
+            }).
+            then((res) => res.json()).
+            then((data)=>{responseData=data})
+            if(responseData.success)
+               {
+               product.image= responseData.image_url;
+               console.log(product);
+
+               await fetch('http://localhost:4000/addproduct',{
+                  method:"POST",
+                  headers:{
+                     Accept:'application/json',
+                     'Content-Type':'application/json',
+                  },
+                  body:JSON.stringify(product)
+               }).then((resp) =>  resp.json()).then((data) => {
+                 data.success?alert('product added'):alert('failed');
+
+                 }
+               )
+            }
+   }
+ 
   return (
     <div className='add-product'>
             <div className="addproduct-itemfield">
@@ -42,7 +76,8 @@ const AddProduct = () => {
 
             <div className="addproduct-itemfield">
                 <p>Product Category</p>
-                <select  value={productDetails.category} onChange={changeHandler}  name="category"  className='addproduct-selector' id="">
+                <select  value={productDetails.category} onChange={changeHandler}  name="category"  className='addproduct-selector' placeholder='select one ' required  id="">
+                    <option value=""> select one</option>
                      <option value="women">Women</option>
                      <option value="men">Men</option>
                      <option value="kid">Kid</option>
